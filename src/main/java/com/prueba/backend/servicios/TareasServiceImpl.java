@@ -3,42 +3,23 @@ package com.prueba.backend.servicios;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.prueba.backend.dao.ItareasDao;
-import com.prueba.backend.entidades.Tareas;
-
+import com.prueba.backend.entidades.GccobranzasGestor;
 
 @Service
-public class TareasServiceImpl implements ITareaService{
+public class TareasServiceImpl implements ITareaService {
 
 	@Autowired
-	private ItareasDao clienteDao;
-	
-	@Override
-	@Transactional(readOnly = true)
-	public List<Tareas> findAll() {
-		return (List<Tareas>) clienteDao.findAll();
-	}
+	private JdbcTemplate jdbcTemplate;
 
-	@Override
-	@Transactional
-	public void save(Tareas cliente) {
-		clienteDao.save(cliente);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Tareas findById(Long id) {
-		return clienteDao.findById(id).orElse(null);
-	}
-
-	@Override
-	@Transactional
-	public void delete(Tareas cliente) {
-		clienteDao.delete(cliente);
-		
+	public List<GccobranzasGestor> findAll2() {
+		String sql = "SELECT CONCAT(PRIMER_NOMBRE, ' ', SEGUNDO_NOMBRE, ' ',PRIMER_APELLIDO, ' ',SEGUNDO_APELLIDO) NOMBRE_COMPLETO FROM GCCOBRANZAS.COB_GESTOR";
+		List<GccobranzasGestor> Gccobranzas_gestor = jdbcTemplate.query(sql,
+				BeanPropertyRowMapper.newInstance(GccobranzasGestor.class));
+		return Gccobranzas_gestor;
 	}
 
 }
